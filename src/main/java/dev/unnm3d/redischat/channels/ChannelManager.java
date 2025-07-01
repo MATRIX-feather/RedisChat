@@ -185,9 +185,6 @@ public class ChannelManager extends RedisChatAPI {
         chatMessage.setFormat(MiniMessage.miniMessage().serialize(event.getFormat()));
         chatMessage.setContent(MiniMessage.miniMessage().serialize(event.getContent()));
 
-        if (!chatMessage.getSender().isDiscord())
-            plugin.getDiscordHook().sendDiscordMessage(chatMessage);
-
         if (currentChannel.getProximityDistance() >= 0) {// Send to local server
             sendGenericChat(chatMessage);
             return;

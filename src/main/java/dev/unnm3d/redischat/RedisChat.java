@@ -22,9 +22,6 @@ import dev.unnm3d.redischat.commands.*;
 import dev.unnm3d.redischat.datamanagers.RedisDataManager;
 import dev.unnm3d.redischat.datamanagers.sqlmanagers.MySQLDataManager;
 import dev.unnm3d.redischat.datamanagers.sqlmanagers.SQLiteDataManager;
-import dev.unnm3d.redischat.discord.DiscordWebhook;
-import dev.unnm3d.redischat.discord.IDiscordHook;
-import dev.unnm3d.redischat.discord.SpicordHook;
 import dev.unnm3d.redischat.integrations.OraxenTagResolver;
 import dev.unnm3d.redischat.integrations.PremiumVanishIntegration;
 import dev.unnm3d.redischat.integrations.SuperVanishIntegration;
@@ -90,8 +87,6 @@ public final class RedisChat extends JavaPlugin {
     @Getter
     private PermissionProvider permissionProvider;
     @Getter
-    private IDiscordHook discordHook;
-    @Getter
     private ExecutorService executorService;
     @Getter
     private MailGUIManager mailGUIManager;
@@ -104,6 +99,7 @@ public final class RedisChat extends JavaPlugin {
     @Override
     public void onLoad() {
         CommandAPI.onLoad(new CommandAPIBukkitConfig(this)
+                .useLatestNMSVersion(true)
                 .silentLogs(true)
                 .skipReloadDatapacks(true)
                 .shouldHookPaperReload(true)
@@ -245,13 +241,6 @@ public final class RedisChat extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("SuperVanish") != null) {
             getLogger().info("SuperVanish found, enabling integration");
             playerListManager.addVanishIntegration(new SuperVanishIntegration(this));
-        }
-        if (getServer().getPluginManager().getPlugin("Spicord") != null && config.spicord.enabled()) {
-            getLogger().info("Spicord found, enabling integration");
-            this.discordHook = new SpicordHook(this);
-        } else {
-            getLogger().info("Spicord not found, using default DiscordWebhook");
-            this.discordHook = new DiscordWebhook(this);
         }
         //PlaceholderAPI is always enabled as it is a dependency
         new RedisChatPAPI(this).register();
